@@ -63,20 +63,15 @@ x_test = returns_test[['lnmktcapadj', 'bidaskadj', 'turnadj', 'putcalladj', 'bma
 'capex_salesmiss', 'lnpatentsmiss', 'cfi_salesmiss', 'insidermiss', 'payoutmiss', 'sentimentmiss', 'demiss']]
 
 # Initialize the random seed for the neural network. Nets select random weights to start the process.
-# Need to set the numpy seed, which initializes the tensorflow seed.
 seed(24754)
 set_seed(11610)
 
-# Neural network code for the full dataset appears, followed by analysis on training and test sets
+# Neural network code for the full dataset, followed by analysis on training and test sets
 nnet0 = Sequential()
 
 # Add a layer of 32 neurons with ReLU activation.
-# It is possible to add a penalty function.
-# In the absence of a penalty factor the neural network can overfit to the training data and therefore perform
-# poorly in predicting returns in the test sample.
 nnet0.add(Dense(32, input_dim=x_train.shape[1], activation='relu', kernel_regularizer=regularizers.l1(0.0001)))
 # nnet0.add(Dense(32, input_dim=x_train.shape[1], activation='relu'))
-# You can add additional hidden layers by switching on the lines below.
 # nnet0.add(Dense(3, input_dim=x.shape[1], activation='relu'))
 # nnet0.add(Dense(3, input_dim=x.shape[1], activation='relu'))
 # nnet0.add(Dense(3, input_dim=x.shape[1], activation='relu'))
@@ -88,15 +83,13 @@ nnet0.add(Dense(1, activation='linear'))
 nnet0.compile(optimizer='adam', loss='mse')
 
 # The default learning rate is 0.001 and the learning rate ranges from 0 to 1.
-# Switch on the two lines below to specify a different learning rate.
-# A fast learning rate might converge to a local optimum. A slow learning rate might not converge.
 # opt = keras.optimizers.Adam(learning_rate=0.001)
 # nnet0.compile(optimizer=opt, loss='mse')
 
 # Fit the data
 history0 = nnet0.fit(x, y, epochs=3)
 
-# Each epoch can be split into batches of different sizes. Use the line below instead of the line above
+# Each epoch can be split into batches of different sizes
 # history0 = nnet0.fit(x, y, epochs=50, batch_size=10000)
 
 # Calculate R-squared score
@@ -116,11 +109,11 @@ print(agg1)
 agg2 = agg1.merge(predictions, how='inner', left_index=True, right_index=True)
 print(agg2)
 
-# Export results to Excel (use sparingly as the file is large)
+# Export results to Excel
 with pd.ExcelWriter(path + 'Neural networks output full 20240408_2318.xlsx') as writer:
     agg2.to_excel(writer, sheet_name='Agg2')
 
-# OLS regression for a quick and dirty view on what characteristics are being used in the neural network under the
+# OLS regression for a quick view on what characteristics are being used in the neural network under the
 # assumption of a linear relationship between features and predicted abnormal returns.
 deletexlist = ['oldindex']
 print(dfx)
@@ -160,12 +153,8 @@ plt.show()
 nnet1 = Sequential()
 
 # Add a layer of 32 neurons with ReLU activation.
-# It is possible to add a penalty function.
-# In the absence of a penalty factor the neural network can overfit to the training data and therefore perform
-# poorly in predicting returns in the test sample.
 nnet1.add(Dense(32, input_dim=x_train.shape[1], activation='relu', kernel_regularizer=regularizers.l1(0.0001)))
 
-# You can add additional hidden layers by switching on the lines below.
 # nnet1.add(Dense(3, input_dim=x_train.shape[1], activation='relu'))
 # nnet1.add(Dense(3, input_dim=x_train.shape[1], activation='relu'))
 # nnet1.add(Dense(3, input_dim=x_train.shape[1], activation='relu'))
@@ -177,15 +166,13 @@ nnet1.add(Dense(1, activation='linear'))
 nnet1.compile(optimizer='adam', loss='mse')
 
 # The default learning rate is 0.001 and the learning rate ranges from 0 to 1.
-# Switch on the two lines below to specify a different learning rate.
-# A fast learning rate might converge to a local optimum. A slow learning rate might not converge.
 # opt = keras.optimizers.Adam(learning_rate=0.001)
 # nnet1.compile(optimizer=opt, loss='mse')
 
 # Fit the data to the full sample and the training set.
 history1 = nnet1.fit(x_train, y_train, epochs=10)
 
-# Each epoch can be split into batches of different sizes. Use the line below instead of the line above
+# Each epoch can be split into batches of different sizes
 # history1 = nnet1.fit(x_train, y_train, epochs=50, batch_size=10000)
 
 # Calculate R-squared score for training and test sets
@@ -219,7 +206,7 @@ print(aggtest2)
 with pd.ExcelWriter(path + 'Neural networks output train 20240408_2332.xlsx') as writer:
     aggtrain2.to_excel(writer, sheet_name='Aggtrain2')
 
-# OLS regression for a quick and dirty view on what characteristics are being used in the neural network under the
+# OLS regression for a quick view on what characteristics are being used in the neural network under the
 # assumption of a linear relationship between features and predicted abnormal returns.
 deletexlist = ['oldindex']
 print(dfx_train)
