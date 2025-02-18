@@ -285,7 +285,6 @@ print(f'Sum of squared difference between y values and average y values in test 
 print(f'R-squared in test sample = 1 - SSR/SST: {rsq_test:.5f}')
 print(f'Square root of the mean squared error in test sample: {rmse_test:.5f}')
 
-# What if we could run the program many times with different alpha?
 
 alphalist_full = []
 rsq_fullsum = []
@@ -359,9 +358,6 @@ plot_tree(dtmodel, feature_names=fn)
 plt.savefig(path + 'Basic decision tree 20240318_1537.pdf')
 plt.show()
 
-# What is the relative importance of each feature in lowering mean squared error?
-# There is tabular output and a chart, the chart does not display well because of the number of features.
-# I have left the chart code in the file in case you want it for another project.
 importances = dt.feature_importances_
 sorted_index = np.argsort(importances)[::-1]
 ximportance = range(len(importances))
@@ -392,9 +388,6 @@ plot_tree(dtmodel_train, feature_names=fn)
 plt.savefig(path + 'Basic decision tree train 20240318_1537.pdf')
 plt.show()
 
-# What is the relative importance of each feature in lowering mean squared error?
-# There is tabular output and a chart, the chart does not display well because of the number of features.
-# I have left the chart code in the file in case you want it for another project.
 importances_train = dt.feature_importances_
 sorted_index_train = np.argsort(importances_train)[::-1]
 ximportance_train = range(len(importances_train))
