@@ -286,7 +286,6 @@ print(f'Sum of squared difference between y values and average y values in test 
 print(f'R-squared in test sample = 1 - SSR/SST: {rsq_test:.5f}')
 print(f'Square root of the mean squared error in test sample: {rmse_test:.5f}')
 
-# What if we could run the program many times with different alpha?
 
 alphalist_full = []
 rsq_fullsum = []
@@ -361,9 +360,6 @@ plot_tree(dtmodel, feature_names=fn)
 plt.savefig(path + 'Basic decision tree 20240331_1445.pdf')
 plt.show()
 
-# What is the relative importance of each feature in lowering mean squared error?
-# There is tabular output and a chart, the chart does not display well because of the number of features.
-# I have left the chart code in the file in case you want it for another project.
 importances = dt.feature_importances_
 sorted_index = np.argsort(importances)[::-1]
 ximportance = range(len(importances))
@@ -394,9 +390,6 @@ plot_tree(dtmodel_train, feature_names=fn)
 plt.savefig(path + 'Basic decision tree train 20240331_1449.pdf')
 plt.show()
 
-# What is the relative importance of each feature in lowering mean squared error?
-# There is tabular output and a chart, the chart does not display well because of the number of features.
-# I have left the chart code in the file in case you want it for another project.
 importances_train = dt.feature_importances_
 sorted_index_train = np.argsort(importances_train)[::-1]
 ximportance_train = range(len(importances_train))
@@ -470,19 +463,6 @@ with pd.ExcelWriter(path + 'Decision-tree output 20240331_1451.xlsx') as writer:
     dfimportance_train.to_excel(writer, sheet_name='Importance_train')
     dfscore_test.to_excel(writer, sheet_name='Score_test')
 
-# Random forests
-# Above, we split on ALL possible features, and specified the maximum depth and minimum leaf percentage.
-# Let's generate many trees in which we specify the maximum number of features under consideration
-# and continue to specify several different maximum depth and minimum leaf percentage.
-# When we specify the maximum number of features, in each forest a random selection of features will be considered
-# in each tree. This will be useful when there is a very large number of features for possible consideration.
-# In our analysis we started with a small enough number of features and observations such that the computer could
-# execute the analysis in reasonable time. But if we had thousands of features and millions of observations,
-# consideration of all the features at once could be problematic.
-
-# First, run a random forest with a specified maximum depth, minimum weight fraction in each leaf, number of trees
-# and maximum features. There is a random state assumption as well, which allows us to check results. If
-# we run the program multiple times with the same random state we should get the same result.
 
 rf = RandomForestRegressor(max_depth=5, min_weight_fraction_leaf=0.10, n_estimators=10, random_state=24754,
                            max_features=10)
@@ -570,12 +550,6 @@ with pd.ExcelWriter(path + 'Random forest output with different parameters 20240
     results_train.to_excel(writer, sheet_name='results_train')
     results_test.to_excel(writer, sheet_name='results_test')
 
-# What if we could run many trees, but each iteration of the tree used information from the prior tree to lower
-# estimation error. This is gradient boosting.
-# Number of trees: Search over large number of (short) trees
-# Maximum depth: The idea is that a large number of short trees may perform well.
-# Learning rate: Each subsequent tree counts less in the predicted output.
-# Subsample: Portion of sample on which to estimate each tree (1 = 100%; 0.5 = 50% etc).
 
 gb = GradientBoostingRegressor(max_features=10, learning_rate=0.01, n_estimators=10, max_depth=3, subsample=1,
                                random_state=24754, min_weight_fraction_leaf=0.10)
@@ -629,7 +603,6 @@ with pd.ExcelWriter(path + 'Gradient boost output 20240331_1518.xlsx') as writer
     gbimportance.to_excel(writer, sheet_name='Importance')
     gbreview_full.to_excel(writer, sheet_name='Review full')
 
-# How do results vary across different parameter inputs into gradient boosting?
 grid = {'n_estimators': [10, 20], 'max_depth': [3, 10], 'max_features': [2, 3], 'random_state': [24754],
         'min_weight_fraction_leaf': [0.05, 0.10], 'learning_rate': [0.01, 0.10],  'subsample': [0.50, 1.00]}
 
